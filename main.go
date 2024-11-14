@@ -59,8 +59,17 @@ func addCreationDateToFrontmatter(filePath string) error {
 			strings.TrimSpace(string(newFrontmatter)),
 			parts[1])
 	} else {
-		newContent = fmt.Sprintf("---\ncreated: %s\n---\n\n%s",
-			creationDate,
+		frontmatter := map[string]interface{}{
+			"created": creationDate,
+		}
+
+		newFrontmatter, err := yaml.Marshal(frontmatter)
+		if err != nil {
+			return err
+		}
+
+		newContent = fmt.Sprintf("---\n%s\n---\n\n%s",
+			strings.TrimSpace(string(newFrontmatter)),
 			contentStr)
 	}
 
